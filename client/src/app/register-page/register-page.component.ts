@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { User } from '../shared/interfaces';
 import { Router } from '@angular/router';
 import { EmailValidator } from '../shared/validators/email.validator';
+import { MaterializeService } from '../shared/services/materialize.service';
 
 @Component({
   selector: 'app-register-page',
@@ -29,7 +30,9 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   onSubmit() {
@@ -43,7 +46,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         });
       },
       err => {
-        console.log(err);
+        MaterializeService.toast(err.error.message);
         this.form.enable();
       }
     );

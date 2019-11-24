@@ -43,7 +43,7 @@ export class AuthService {
     }
 
     isAuthenticated(): boolean {
-        return !this.token;
+        return !!this.token;
     }
 
     checkEmailNotTaken(email: string): Observable<boolean> {

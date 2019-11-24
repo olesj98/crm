@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../shared/services/auth.service';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { MaterializeService } from '../shared/services/materialize.service';
 
 @Component({
   selector: 'app-login-page',
@@ -31,8 +32,13 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         // nasluchujemy queryParams
         if (params.registered) {
           // Now you can enter the system
+          MaterializeService.toast('Now you can enter the system with your credentials.');
         } else if (params.accessDenied) {
           // you should be registered
+          MaterializeService.toast('You should be register to enter the system.');
+        } else if (params.sessionFailed) {
+          // you should be registered
+          MaterializeService.toast('Your session is ower, login again.');
         }
       }
     );
@@ -50,10 +56,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
     this.sub = this.auth.login(this.form.value).subscribe(
       () => {
-        // this.router.navigate(['/overviev']);
+        this.router.navigate(['/overview']);
       },
       (err) => {
-        console.log(err);
+        MaterializeService.toast(err.error.message);
         this.form.enable();
       }
     );

@@ -64,7 +64,7 @@
   </form>
 
   <div class="col s12 l4 center">
-    <img 
+    <img
       class="responsive-img h200"
       [src]="imagePreview"
       *ngIf="imagePreview"
@@ -72,4 +72,7 @@
   </div>
 </div>
 
-<!-- <app-positions-form></app-positions-form> -->
+<app-positions-form
+  *ngIf="category?._id"
+  [categoryId]="category._id"
+></app-positions-form>

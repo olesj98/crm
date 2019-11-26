@@ -2,39 +2,80 @@
   <div class="col s12">
     <div class="page-subtitle">
       <h4>Позиции:</h4>
-      <button class="waves-effect waves-light btn grey darken-1 btn-small modal-trigger" data-target="create-modal">
+      <button class="waves-effect waves-light btn grey darken-1 btn-small" (click)="onAddPosition()">
         Добавить позицию
       </button>
     </div>
 
-    <div class="collection">
-      <a class="collection-item collection-item-icon">
-        <span>
-          Кофе <strong>20 руб.</strong>
-        </span>
-        <span>
-          <i class="material-icons">delete</i>
-        </span>
-      </a>
+    <div *ngIf="!loading; else loader">
+      <div class="collection" *ngIf="positions.length !== 0; else empty">
+        <a *ngFor="let position of positions" class="collection-item collection-item-icon"
+          (click)="onSelectPosition(position)">
+          <span>
+            {{position.name}} <strong>{{position.cost}} pln.</strong>
+          </span>
+          <span>
+            <i class="material-icons" (click)="onDeletePosition($event, position)">delete</i>
+          </span>
+        </a>
+      </div>
+      <ng-template #empty>
+        <div style="text-align: center;">
+          No positions in this category.
+        </div>
+      </ng-template>
     </div>
+    <ng-template #loader>
+      <div style="text-align: center;">
+        <app-loader></app-loader>
+      </div>
+    </ng-template>
   </div>
 </div>
 
 <!-- modal -->
-<div id="create-modal" class="modal">
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <div #modal class="modal">
     <div class="modal-content">
         <h4 class="mb1">Добавить позицию</h4>
         <div class="input-field">
-            <input id="pos-name" type="text" required>
-            <label for="pos-name">Название</label>
+          <input 
+            id="pos-name" 
+            type="text" 
+            formControlName="name" 
+            [ngClass]="{invalid: form.get('name').invalid && form.get('name').touched}"
+            >
+          <label for="pos-name">Название</label>
+          <span class="helper-text red-text" *ngIf="form.get('name').invalid && form.get('name').touched">
+            Enter name.
+          </span>
         </div>
         <div class="input-field">
-            <input id="pos-cost" type="text" required>
-            <label for="pos-cost">Цена</label>
+          <input 
+            id="pos-cost" 
+            type="number" 
+            formControlName="cost"
+            [ngClass]="{invalid: form.get('cost').invalid && form.get('cost').touched}" 
+            >
+          <label for="pos-cost">Цена</label>
+          <span *ngIf="form.get('cost').invalid">
+            <span class="helper-text red-text" *ngIf="form.get('cost').errors.min && form.get('cost').touched">
+              Cost must be more than 0.
+            </span>
+            <span class="helper-text red-text" *ngIf="form.get('cost').errors.required && form.get('cost').touched">
+              Enter cost.
+            </span>
+          </span>
         </div>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-action waves-effect waves-black btn-flat">Отмена</a>
-        <button class="modal-action btn waves-effect">Сохранить</button>
+      <button 
+        (click)="onCancell()" 
+        type="button" 
+        class="modal-action waves-effect waves-black btn-flat"
+        [disabled]="form.disabled"
+      >Отмена</button>
+      <button class="modal-action btn waves-effect" type="submit" [disabled]="form.disabled || form.invalid">Сохранить</button>
     </div>
-</div>
+  </div>
+</form>

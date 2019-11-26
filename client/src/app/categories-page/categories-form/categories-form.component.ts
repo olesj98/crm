@@ -74,7 +74,6 @@ export class CategoriesFormComponent implements OnInit {
         this.form.enable();
         MaterializeService.toast('Changes saved.');
         this.category = category;
-        console.log(category);
       },
       err => {
         this.form.enable();

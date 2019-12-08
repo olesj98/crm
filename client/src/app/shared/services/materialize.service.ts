@@ -24,4 +24,8 @@ export class MaterializeService {
     static initModal(ref: ElementRef): ModalInstance {
         return M.Modal.init(ref.nativeElement);
     }
+
+    static initTooltip(ref: ElementRef): ModalInstance {
+        return M.Tooltip.init(ref.nativeElement);
+    }
 }

@@ -8,6 +8,10 @@ export interface ModalInstance {
     destroy?(): void;
 }
 
+export interface MaterialDatepicker extends ModalInstance {
+    date?: Date;
+}
+
 export class MaterializeService {
     static toast(message: string) {
         M.toast({ html: message });
@@ -27,5 +31,17 @@ export class MaterializeService {
 
     static initTooltip(ref: ElementRef): ModalInstance {
         return M.Tooltip.init(ref.nativeElement);
+    }
+
+    static initDatepicker(ref: ElementRef, onClose: () => void): MaterialDatepicker {
+        return M.Datepicker.init(ref.nativeElement, {
+            format: 'dd.mm.yyyy',
+            showClearBtn: true,
+            onClose
+        });
+    }
+
+    static initTapTarget(elemRef: ElementRef): ModalInstance {
+        return M.TapTarget.init(elemRef.nativeElement);
     }
 }

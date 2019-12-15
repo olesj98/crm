@@ -14,7 +14,7 @@ export class OrderService {
     add(position: Position) {
         const orderPosition = {
             name: position.name,
-            cost: position.cost * position.quantity,
+            cost: position.cost,
             quantity: position.quantity,
             _id: position._id
         };

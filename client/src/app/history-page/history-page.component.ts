@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } fr
 import { MaterializeService, ModalInstance } from '../shared/services/materialize.service';
 import { OrdersService } from '../shared/services/orders.service';
 import { Subscription } from 'rxjs';
-import { Order } from '../shared/interfaces';
+import { Order, Filter } from '../shared/interfaces';
 
 const STEP = 2;
 
@@ -15,8 +15,8 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('tooltip') ref: ElementRef;
 
-  isFilterVisible = false;
   tooltip: ModalInstance;
+  isFilterVisible = false;
   sub: Subscription;
   noMoreOrders = false;
 
@@ -27,6 +27,7 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   offset = 0;
   limit = STEP;
+  filter: Filter = {};
 
   constructor(
     private ordersService: OrdersService
@@ -49,7 +50,8 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private fetch() {
     const params = {
       offset: this.offset,
-      limit: this.limit
+      limit: this.limit,
+      ...this.filter
     };
     this.sub = this.ordersService.fetch(params).subscribe(
       (orders) => {
@@ -57,7 +59,6 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.noMoreOrders = orders.length < STEP;
         this.loading = false;
         this.reloading = false;
-        console.log(this.reloading);
       }
     );
   }
@@ -66,6 +67,18 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loading = true;
     this.offset += STEP;
     this.fetch();
+  }
+
+  applyFilter(filter: Filter) {
+    this.orders = [];
+    this.offset = 0;
+    this.reloading = true;
+    this.filter = filter;
+    this.fetch();
+  }
+
+  isFiltered(): boolean {
+    return Object.keys(this.filter).length !== 0;
   }
 
 }

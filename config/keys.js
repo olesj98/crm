@@ -1,4 +1,5 @@
-module.exports = {
-    MONGO_URI: 'mongodb+srv://Oleksandr:olesj050298@firstcluster-f4sgd.mongodb.net/test?retryWrites=true&w=majority',
-    jwt: 'dev-jwt'
+if(process.env.NODE_ENV === 'production') {
+    module.exports = require('./keys.prod');
+} else {
+    module.exports = require('./keys.dev');
 }
